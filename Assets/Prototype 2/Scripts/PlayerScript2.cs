@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerScript2 : MonoBehaviour
@@ -5,11 +6,9 @@ public class PlayerScript2 : MonoBehaviour
     public Rigidbody2D rb;
     public float Speed = 5f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
+    public bool OnGround = false;
+    public bool FacingLeft = false;
+    public List<GameObject> touching;
 
     // Update is called once per frame
     void Update()
@@ -20,50 +19,53 @@ public class PlayerScript2 : MonoBehaviour
 
     public void PlayerMovement()
     {
-        Vector2 vel = new Vector2(0, 0);
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            vel.x = Speed;
-        }
-        //If I hold the left arrow, the player should move left. . .
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            vel.x = -Speed;
-        }
-        //If I hold the up arrow, the player should move up. . .
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            vel.y = Speed;
-        }
-        //If I hold the down arrow, the player should move down. . .
-        if (Input.GetKey(KeyCode.DownArrow))
-        {
-            vel.y = -Speed;
-        }
+        float moveInput = Input.GetAxis("Horizontal"); // Gets input from A/D or Left/Right arrow keys
+        rb.linearVelocity = new Vector2(moveInput * Speed, rb.linearVelocity.y);
 
-        rb.linearVelocity = vel;
+        if (Input.GetKeyDown(KeyCode.Space) && CanJump())
+        {
+            rb.gravityScale = -rb.gravityScale; // Inverts gravity when spacebar is pressed
+        }
 
     }
 
     public void Warp()
     {
-        // if (transform.position.x > 9.5f)
-        // {
-        //     transform.position = new Vector3(-9.5f, transform.position.y, transform.position.z);
-        // }
-        // if (transform.position.x < -5.3f)
-        // {
-        //     transform.position = new Vector3(5.3f, transform.position.y, transform.position.z);
-        // }
-        // if (transform.position.y > 5.5f)
-        // {
-        //     transform.position = new Vector3(transform.position.x, -5.5f, transform.position.z);
-        // }
-        if (transform.position.y < -5.3f)
+        if (transform.position.y > 5.3f)
+        {
+            transform.position = new Vector3(transform.position.x, -5.3f, transform.position.z);
+        }
+        else if (transform.position.y < -5.3f)
         {
             transform.position = new Vector3(transform.position.x, 5.3f, transform.position.z);
         }
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            //Teleport to start position
+            transform.position = new Vector3(0, 0, 0);
+        }
+    }
+
+    
+    public bool CanJump()
+    {
+        return touching.Count > 0;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        OnGround = true;
+        touching.Add(other.gameObject);
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        OnGround = false;
+        touching.Remove(other.gameObject);
     }
     
 
