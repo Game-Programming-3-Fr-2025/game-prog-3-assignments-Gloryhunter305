@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class PlayerScript : MonoBehaviour
     public float Speed = 5f;
 
     public ProjectileScript projectile;
+
+    SceneManager sceneManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,7 +22,10 @@ public class PlayerScript : MonoBehaviour
     {
         Movement();
 
-        PlayerShoot();
+        if (SceneManager.GetActiveScene().name == "PrototypeOneMain")
+        {
+            PlayerShoot();
+        }
     }
 
 
@@ -50,7 +56,7 @@ public class PlayerScript : MonoBehaviour
         rb.linearVelocity = vel;
 
     }
-    
+
     public void PlayerShoot()
     {
         if (Input.GetMouseButtonDown(0))
