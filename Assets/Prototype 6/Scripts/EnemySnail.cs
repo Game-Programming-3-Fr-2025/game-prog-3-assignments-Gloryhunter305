@@ -1,0 +1,31 @@
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class EnemySnail : MonoBehaviour
+{
+    public Transform target;
+    public float speed = 3f;
+
+    private Rigidbody2D rb;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Constantly move towards the player
+        Vector2 direction = (target.position - transform.position).normalized;
+        rb.linearVelocity = direction * speed;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Enemy Snail collided with Player!");
+        }
+    }
+}
