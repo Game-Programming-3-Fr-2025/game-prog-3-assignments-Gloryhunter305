@@ -7,6 +7,7 @@ TagManager:
   - SlowZone
   - Projectile
   - Enemy
+  - Goal
   layers:
   - Default
   - TransparentFX

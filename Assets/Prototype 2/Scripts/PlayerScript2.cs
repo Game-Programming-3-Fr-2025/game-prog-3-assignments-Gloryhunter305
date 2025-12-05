@@ -3,12 +3,19 @@ using UnityEngine;
 
 public class PlayerScript2 : MonoBehaviour
 {
-    public Rigidbody2D rb;
-    public float Speed = 5f;
+    [Header("Player Components")]
+    [SerializeField] private Rigidbody2D _rigidBody2D;
+    [SerializeField] private float _speed = 5f;
 
-    public bool OnGround = false;
-    public bool FacingLeft = false;
-    public List<GameObject> touching;
+    private bool OnGround;
+    private List<GameObject> touching;
+
+    private void Start()
+    {
+        touching = new List<GameObject>();
+        if (_rigidBody2D == null)
+            _rigidBody2D = GetComponent<Rigidbody2D>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -21,29 +28,33 @@ public class PlayerScript2 : MonoBehaviour
     {
 
         float moveInput = Input.GetAxis("Horizontal"); // Gets input from A/D or Left/Right arrow keys
-        rb.linearVelocity = new Vector2(moveInput * Speed, rb.linearVelocity.y);
+        // Use Rigidbody2D.velocity (not linearVelocity) so physics works correctly
+        _rigidBody2D.linearVelocity = new Vector2(moveInput * _speed, _rigidBody2D.linearVelocity.y);
 
         if (Input.GetKeyDown(KeyCode.Space) && CanJump())
         {
-            rb.gravityScale = -rb.gravityScale; // Inverts gravity when spacebar is pressed
+            // Invert gravity by negating the gravityScale
+            _rigidBody2D.gravityScale *= -1f;
+            // Optionally zero vertical velocity so inversion is instantaneous
+            _rigidBody2D.linearVelocity = new Vector2(_rigidBody2D.linearVelocity.x, 0f);
         }
 
     }
 
     public void Warp()
     {
-        if (transform.position.y > 5.3f)
+        if (transform.position.y > 10f)
         {
-            transform.position = new Vector3(transform.position.x, -5.3f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, -6f, transform.position.z);
         }
-        else if (transform.position.y < -5.3f)
+        else if (transform.position.y < -6f)
         {
-            transform.position = new Vector3(transform.position.x, 5.3f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, 10f, transform.position.z);
         }
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") || other.CompareTag("Goal"))
         {
             //Teleport to start position
             transform.position = new Vector3(0, 0, 0);
