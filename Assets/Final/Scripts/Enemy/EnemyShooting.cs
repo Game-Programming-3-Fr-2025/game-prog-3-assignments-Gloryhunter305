@@ -26,7 +26,7 @@ public class EnemyShooting : MonoBehaviour
     private void Update()
     {
         float distance = Vector2.Distance(transform.position, _player.transform.position);
-        Debug.Log("Distance to Player: " + distance);
+        //Debug.Log("Distance to Player: " + distance);
         if (distance < shootingRange)
         {
             _currentShootInterval -= Time.deltaTime;

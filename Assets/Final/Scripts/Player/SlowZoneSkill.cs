@@ -10,7 +10,7 @@ public class SlowZoneSkill : MonoBehaviour
 
     private void Start()
     {
-        _slowZone = GameObject.FindGameObjectWithTag("SlowZone").GetComponent<GameObject>();
+        _slowZone = GameObject.FindWithTag("SlowZone").GetComponent<GameObject>();
     }
 
     private void Update()

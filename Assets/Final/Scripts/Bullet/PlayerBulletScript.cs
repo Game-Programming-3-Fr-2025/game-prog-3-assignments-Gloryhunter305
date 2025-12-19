@@ -37,8 +37,17 @@ public class PlayerBulletScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            //Damage the enemy
-            Destroy(gameObject); // destroy bullet on hit
+            HealthManager enemyHealth = collision.gameObject.GetComponent<HealthManager>();
+            
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(1); // assuming bullet does 1 damage
+            }
+            else
+            {
+                Debug.LogWarning("Enemy does not have a HealthManager component.");
+            }
+            Destroy(gameObject);
         }
     }
 }

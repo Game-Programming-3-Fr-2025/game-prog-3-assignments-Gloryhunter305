@@ -55,10 +55,18 @@ public class EnemyBulletScript : MonoBehaviour
             isSlowed = true;
         }
 
-        if (other.gameObject.CompareTag("Player"))
+        else if (other.gameObject.CompareTag("Player"))
         {
-            // attempt to apply damage if receiver implements it, else send message
-            other.gameObject.SendMessage("TakeDamage", 20, SendMessageOptions.DontRequireReceiver);
+            HealthManager playerHealth = other.gameObject.GetComponent<HealthManager>();
+
+            if (playerHealth != null)
+            {
+                playerHealth.TakeDamage(1); // assuming bullet does 1 damage
+            }
+            else
+            {
+                Debug.LogWarning("Player does not have a HealthManager component.");
+            }
             Destroy(gameObject);
         }
     }
